@@ -36,3 +36,44 @@
     transform: rotate(360deg);
   }
 }
+
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border: 1px solid gray;
+}
+
+.cell:disabled {
+  background-color: lightgray;
+  border: 1px solid gray;
+}
+
+.cell._active {
+  background-color: blueviolet;
+  color: #fff;
+  border: none;
+}
+
+.toolbar {
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 400px;
+}
+
+.button {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.title {
+  margin-top: 0;
+}
