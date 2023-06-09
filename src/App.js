@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import cn from 'classnames';
 
 const matrix = [];
-const R = 20;
+const R = 15;
 const C = 10;
 const SUM = 10;
 const ROWS_FILLED = 3;
