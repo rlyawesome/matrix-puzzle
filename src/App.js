@@ -2,6 +2,7 @@ import './App.css';
 import { v4 } from 'uuid';
 import { useEffect, useState } from 'react';
 import cn from 'classnames';
+import { Button, Typography } from '@mui/material';
 
 const matrix = [];
 const R = 15;
@@ -17,6 +18,10 @@ const getRandomValue = () => {
 };
 
 const generateMatrix = () => {
+  const PI = '3141592653589793238462643383279502884197';
+  const numbers = PI.split('');
+  let pointer = 0;
+
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
       matrix[i] = [];
@@ -26,7 +31,7 @@ const generateMatrix = () => {
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
       if (i < ROWS_FILLED) {
-        matrix[i][j] = getRandomValue();
+        matrix[i][j] = Number(numbers[pointer++]);
         last = [i, j];
       } else {
         matrix[i][j] = EMPTY;
@@ -207,37 +212,56 @@ function App() {
   };
 
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <h1 className='title'>The Game</h1>
-        {result === 'WIN' && <p>Victory is yours! Well done! 😎</p>}
-        {result === 'LOSE' && <p>Don't give up, you're getting closer! 😉</p>}
-        <div className='matrix'>
-          {board.map((row, i) =>
-            row.map((el, j) => (
-              <button
-                type='button'
-                className={cn('cell', {
-                  _active: isButtonActive(i, j),
-                })}
-                key={v4()}
-                onClick={() => handleClick(i, j)}
-                disabled={el === REMOVED || !el}
-              >
-                {el}
-              </button>
-            ))
-          )}
-        </div>
-        <div className='toolbar'>
-          <button type='button' className='button _continue' onClick={handleNewGame} disabled={result !== null}>
-            New game
-          </button>
-          <button type='button' className='button _continue' onClick={handleContinue} disabled={result !== null}>
-            Continue
-          </button>
-        </div>
+    <div className='app'>
+      <header className='header'>
+        <Typography variant='h5'>Matrix Puzzle</Typography>
       </header>
+
+      <div className='body'>
+        <div className='container'>
+          {result === 'WIN' && (
+            <Typography variant='h6' textAlign='center' my={1}>
+              Victory is yours! Well done! 😎
+            </Typography>
+          )}
+          {result === 'LOSE' && (
+            <Typography variant='h6' textAlign='center' my={1}>
+              Try again, victory awaits! 😉
+            </Typography>
+          )}
+          <div className='matrix'>
+            {board.map((row, i) =>
+              row.map((el, j) => (
+                <button
+                  type='button'
+                  className={cn('cell', {
+                    _active: isButtonActive(i, j),
+                  })}
+                  key={v4()}
+                  onClick={() => handleClick(i, j)}
+                  disabled={el === REMOVED || !el}
+                >
+                  {el === 'X' ? <span>&#10005;</span> : el}
+                </button>
+              ))
+            )}
+          </div>
+          <div className='toolbar'>
+            <Button variant='contained' color='primary' onClick={handleNewGame} sx={{ backgroundColor: 'deepskyblue' }}>
+              New game
+            </Button>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={handleContinue}
+              sx={{ backgroundColor: 'deepskyblue' }}
+              disabled={result !== null}
+            >
+              Continue
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
