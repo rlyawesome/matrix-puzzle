@@ -48,6 +48,11 @@
   /* border: 0; */
 }
 
+.cell._hint {
+  background-color: aquamarine;
+  border: none;
+}
+
 .cell._active {
   background-color: deepskyblue;
   color: #fff;

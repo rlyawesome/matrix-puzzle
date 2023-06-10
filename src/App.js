@@ -2,15 +2,15 @@ import './App.css';
 import { v4 } from 'uuid';
 import { useEffect, useState } from 'react';
 import cn from 'classnames';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 const matrix = [];
-const R = 15;
-const C = 10;
-const SUM = 10;
-const ROWS_FILLED = 3;
-const EMPTY = '';
-const REMOVED = 'X';
+export const R = 15;
+export const C = 10;
+export const SUM = 10;
+export const ROWS_FILLED = 3;
+export const EMPTY = '';
+export const REMOVED = 'X';
 let last = null;
 
 const getRandomValue = () => {
@@ -46,7 +46,8 @@ function App() {
   const [board, setBoard] = useState(matrix);
   const [first, setFirst] = useState(null);
   const [second, setSecond] = useState(null);
-  const [result, setResult] = useState(null);
+  const [gameResult, setGameResult] = useState(null);
+  const [hintResult, setHintResult] = useState(null);
 
   useEffect(() => {
     if (first === null || second === null) return;
@@ -57,24 +58,22 @@ function App() {
     }
     setFirst(null);
     setSecond(null);
+    setHintResult(null);
   }, [first, second]);
 
   const checkCandidates = (a, b) => {
     console.log(a, b);
-    if (!checkSum(a, b) && !checkEqualValues(a, b)) return false;
+    const firstValue = board[a[0]][a[1]];
+    const secondValue = board[b[0]][b[1]];
+    if (!checkByValues(firstValue, secondValue)) return false;
+    if (firstValue !== secondValue && firstValue + secondValue !== SUM) return false;
     console.log(checkByRow(a, b), ' ', checkByColumn(a, b), ' ', checkClosestByDirection(a, b));
     if (checkByRow(a, b) || checkByColumn(a, b) || checkClosestByDirection(a, b)) return true;
     return false;
   };
 
-  const checkSum = (a, b) => {
-    if (matrix[a[0]][a[1]] + matrix[b[0]][b[1]] === SUM) return true;
-    return false;
-  };
-
-  const checkEqualValues = (a, b) => {
-    if (matrix[a[0]][a[1]] === matrix[b[0]][b[1]]) return true;
-    return false;
+  const checkByValues = (x, y) => {
+    return x === y || x + y === SUM;
   };
 
   const checkByColumn = (a, b) => {
@@ -160,10 +159,19 @@ function App() {
     }
   };
 
-  const isButtonActive = (i, j) => {
+  const isActiveCell = (i, j) => {
     if (first !== null && first[0] === i && first[1] === j) return true;
     if (second !== null && second[0] === i && second[1] === j) return true;
     return false;
+  };
+
+  const isHintCell = (i, j) => {
+    if (hintResult === null) return false;
+    const coordsFirst = hintResult[0].split(',');
+    const coordsSecond = hintResult[1].split(',');
+    const isFirstMatch = i === Number(coordsFirst[0]) && j === Number(coordsFirst[1]);
+    const isSecondMatch = i === Number(coordsSecond[0]) && j === Number(coordsSecond[1]);
+    return isFirstMatch || isSecondMatch;
   };
 
   const handleContinue = () => {
@@ -192,7 +200,6 @@ function App() {
     if (itemsLeft.length > pointer) {
       onLose();
     }
-    console.log(latest);
     last = latest;
     setBoard(newBoard);
   };
@@ -201,14 +208,84 @@ function App() {
     window.location.reload();
   };
 
+  const searchCandidates = (boardRef) => {
+    let result = null;
+    for (let i = 0; i < R; i++) {
+      for (let j = 0; j < C; j++) {
+        const currentValue = boardRef[i][j];
+        if (currentValue === EMPTY) return null;
+        if (currentValue === REMOVED) continue;
+        result = searchByColumn(boardRef, i, j);
+        if (result !== null) return result;
+        result = searchByDirection(boardRef, i, j);
+        if (result !== null) return result;
+      }
+    }
+    return null;
+  };
+
+  const searchByRow = (boardRef, i, j) => {
+    for (let k = j + 1; k < C; k++) {
+      const secondValue = boardRef[i][k];
+      if (secondValue === EMPTY) return null;
+      if (secondValue === REMOVED) continue;
+      if (checkByValues(boardRef[i][j], secondValue)) {
+        // hint match result type
+        console.log([`${i},${j}`, `${i},${k}`]);
+        return [`${i},${j}`, `${i},${k}`];
+      } else {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const searchByColumn = (boardRef, i, j) => {
+    for (let k = i + 1; k < R; k++) {
+      const secondValue = boardRef[k][j];
+      if (secondValue === EMPTY) return null;
+      if (secondValue === REMOVED) continue;
+      if (checkByValues(boardRef[i][j], secondValue)) {
+        // hint match result type
+        console.log([`${i},${j}`, `${k},${j}`]);
+        return [`${i},${j}`, `${k},${j}`];
+      } else {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const searchByDirection = (boardRef, i, j) => {
+    for (let ii = i; ii < R; ii++) {
+      const jjInitial = ii === i ? j + 1 : 0;
+      for (let jj = jjInitial; jj < C; jj++) {
+        const secondValue = boardRef[ii][jj];
+        if (secondValue === EMPTY) return null;
+        if (secondValue === REMOVED) continue;
+        if (checkByValues(boardRef[i][j], secondValue)) {
+          // hint match result type
+          console.log([`${i},${j}`, `${ii},${jj}`]);
+          return [`${i},${j}`, `${ii},${jj}`];
+        } else {
+          return null;
+        }
+      }
+    }
+    return null;
+  };
+
+  const handleHint = () => {
+    const result = searchCandidates(board);
+    setHintResult(result);
+  };
+
   const onWin = () => {
-    console.log('Victory is yours! Well done!');
-    setResult('WIN');
+    setGameResult('WIN');
   };
 
   const onLose = () => {
-    console.log(`Don't give up, you're getting closer!`);
-    setResult('LOSE');
+    setGameResult('LOSE');
   };
 
   return (
@@ -219,12 +296,12 @@ function App() {
 
       <div className='body'>
         <div className='container'>
-          {result === 'WIN' && (
+          {gameResult === 'WIN' && (
             <Typography variant='h6' textAlign='center' my={1}>
               Victory is yours! Well done! 😎
             </Typography>
           )}
-          {result === 'LOSE' && (
+          {gameResult === 'LOSE' && (
             <Typography variant='h6' textAlign='center' my={1}>
               Try again, victory awaits! 😉
             </Typography>
@@ -235,7 +312,8 @@ function App() {
                 <button
                   type='button'
                   className={cn('cell', {
-                    _active: isButtonActive(i, j),
+                    _active: isActiveCell(i, j),
+                    _hint: isHintCell(i, j),
                   })}
                   key={v4()}
                   onClick={() => handleClick(i, j)}
@@ -247,18 +325,27 @@ function App() {
             )}
           </div>
           <div className='toolbar'>
-            <Button variant='contained' color='primary' onClick={handleNewGame} sx={{ backgroundColor: 'deepskyblue' }}>
+            <Button variant='contained' onClick={handleNewGame} sx={{ backgroundColor: 'deepskyblue' }}>
               New game
             </Button>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={handleContinue}
-              sx={{ backgroundColor: 'deepskyblue' }}
-              disabled={result !== null}
-            >
-              Continue
-            </Button>
+            <Box display='flex' gap={1}>
+              <Button variant='contained' onClick={handleHint} sx={{ backgroundColor: 'deepskyblue' }}>
+                Hint
+              </Button>
+              <Button
+                variant='contained'
+                onClick={handleContinue}
+                sx={{
+                  backgroundColor: 'deepskyblue',
+                  '&.Mui-disabled': {
+                    backgroundColor: 'lightgray',
+                  },
+                }}
+                disabled={gameResult !== null}
+              >
+                Continue
+              </Button>
+            </Box>
           </div>
         </div>
       </div>
