@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/matrix-puzzle/static/css/main.8f6ff7a6.css",
-    "main.js": "/matrix-puzzle/static/js/main.9008f740.js",
+    "main.css": "/matrix-puzzle/static/css/main.2b4b0d92.css",
+    "main.js": "/matrix-puzzle/static/js/main.dcee571a.js",
     "static/js/787.e6d2df2e.chunk.js": "/matrix-puzzle/static/js/787.e6d2df2e.chunk.js",
     "index.html": "/matrix-puzzle/index.html",
-    "main.8f6ff7a6.css.map": "/matrix-puzzle/static/css/main.8f6ff7a6.css.map",
-    "main.9008f740.js.map": "/matrix-puzzle/static/js/main.9008f740.js.map",
+    "main.2b4b0d92.css.map": "/matrix-puzzle/static/css/main.2b4b0d92.css.map",
+    "main.dcee571a.js.map": "/matrix-puzzle/static/js/main.dcee571a.js.map",
     "787.e6d2df2e.chunk.js.map": "/matrix-puzzle/static/js/787.e6d2df2e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8f6ff7a6.css",
-    "static/js/main.9008f740.js"
+    "static/css/main.2b4b0d92.css",
+    "static/js/main.dcee571a.js"
   ]
 }
