@@ -37,12 +37,6 @@ export const checkByValues = (x, y) => {
   return x === y || x + y === SUM;
 };
 
-const checkByRow = (a, b) => {
-  if (a[1] === b[1]) return false;
-  if (Math.abs(a[1] - b[1]) === 1 && a[0] === b[0]) return true;
-  return false;
-};
-
 const checkByColumn = (board, a, b) => {
   if (a[0] === b[0]) return false;
   if (a[1] !== b[1]) return false;
@@ -56,7 +50,7 @@ const checkByColumn = (board, a, b) => {
   return true;
 };
 
-const checkClosestByDirection = (board, a, b) => {
+const checkByRows = (board, a, b) => {
   let from = null;
   let to = null;
 
@@ -93,8 +87,8 @@ export const checkCandidates = (board, a, b) => {
   const secondValue = board[b[0]][b[1]];
   if (!checkByValues(firstValue, secondValue)) return false;
   if (firstValue !== secondValue && firstValue + secondValue !== SUM) return false;
-  console.log(checkByRow(a, b), ' ', checkByColumn(board, a, b), ' ', checkClosestByDirection(board, a, b));
-  if (checkByRow(a, b) || checkByColumn(board, a, b) || checkClosestByDirection(board, a, b)) return true;
+  console.log(checkByColumn(board, a, b), ' ', checkByRows(board, a, b));
+  if (checkByColumn(board, a, b) || checkByRows(board, a, b)) return true;
   return false;
 };
 
@@ -107,21 +101,6 @@ export const checkGameSuccess = (board) => {
     }
   }
   return true;
-};
-
-const searchByRow = (board, i, j) => {
-  for (let k = j + 1; k < C; k++) {
-    const secondValue = board[i][k];
-    if (secondValue === EMPTY) return null;
-    if (secondValue === REMOVED) continue;
-    if (checkByValues(board[i][j], secondValue)) {
-      console.log([`${i},${j}`, `${i},${k}`]);
-      return [`${i},${j}`, `${i},${k}`];
-    } else {
-      return null;
-    }
-  }
-  return null;
 };
 
 const searchByColumn = (board, i, j) => {
@@ -140,7 +119,7 @@ const searchByColumn = (board, i, j) => {
   return null;
 };
 
-const searchByDirection = (board, i, j) => {
+const searchByRows = (board, i, j) => {
   for (let ii = i; ii < R; ii++) {
     const jjInitial = ii === i ? j + 1 : 0;
     for (let jj = jjInitial; jj < C; jj++) {
@@ -168,7 +147,7 @@ export const searchCandidates = (board) => {
       if (currentValue === REMOVED) continue;
       result = searchByColumn(board, i, j);
       if (result !== null) return result;
-      result = searchByDirection(board, i, j);
+      result = searchByRows(board, i, j);
       if (result !== null) return result;
     }
   }
