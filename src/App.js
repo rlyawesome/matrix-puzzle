@@ -142,7 +142,7 @@ function App() {
                   onClick={() => handleClick(i, j)}
                   disabled={el === REMOVED || !el}
                 >
-                  {el === 'X' ? <span>&#10005;</span> : el}
+                  {el === REMOVED ? <span>&#10005;</span> : el}
                 </button>
               ))
             )}
