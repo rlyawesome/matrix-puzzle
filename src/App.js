@@ -18,10 +18,6 @@ const getRandomValue = () => {
 };
 
 const generateMatrix = () => {
-  const PI = '3141592653589793238462643383279502884197';
-  const numbers = PI.split('');
-  let pointer = 0;
-
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
       matrix[i] = [];
@@ -31,7 +27,7 @@ const generateMatrix = () => {
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
       if (i < ROWS_FILLED) {
-        matrix[i][j] = Number(numbers[pointer++]);
+        matrix[i][j] = getRandomValue();
         last = [i, j];
       } else {
         matrix[i][j] = EMPTY;
