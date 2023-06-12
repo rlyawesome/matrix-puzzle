@@ -29,30 +29,28 @@ function App() {
 
   useEffect(() => {
     if (first === null || second === null) return;
-    if (checkCandidates(board, first, second)) {
-      handleCandidatesSuccess(first, second);
+    if (checkCandidates(first, second)) {
+      onCandidatesSuccess(first, second);
     } else {
-      handleCandidatesError();
+      onCandidatesError();
     }
     setFirst(null);
     setSecond(null);
     setHintResult(null);
   }, [first, second]);
 
-  const handleCandidatesSuccess = (a, b) => {
+  const onCandidatesSuccess = (cellA, cellB) => {
     const newBoard = [...board];
 
-    const elA = newBoard[a[0]][a[1]];
-    linkX(elA.prevX, elA.nextX);
-    linkY(elA.prevY, elA.nextY);
-    elA.value = REMOVED;
-    unlink(elA);
+    linkX(cellA.prevX, cellA.nextX);
+    linkY(cellA.prevY, cellA.nextY);
+    cellA.value = REMOVED;
+    unlink(cellA);
 
-    const elB = newBoard[b[0]][b[1]];
-    linkX(elB.prevX, elB.nextX);
-    linkY(elB.prevY, elB.nextY);
-    elB.value = REMOVED;
-    unlink(elB);
+    linkX(cellB.prevX, cellB.nextX);
+    linkY(cellB.prevY, cellB.nextY);
+    cellB.value = REMOVED;
+    unlink(cellB);
 
     if (checkGameSuccess(newBoard)) {
       onWin();
@@ -60,31 +58,29 @@ function App() {
     setBoard(newBoard);
   };
 
-  const handleCandidatesError = () => {
+  const onCandidatesError = () => {
     console.log('Oops!');
   };
 
-  const handleClick = (i, j) => {
+  const handleClick = (cell) => {
     if (!first) {
-      setFirst([i, j]);
+      setFirst(cell);
     } else {
-      setSecond([i, j]);
+      setSecond(cell);
     }
   };
 
-  const isActiveCell = (i, j) => {
-    if (first !== null && first[0] === i && first[1] === j) return true;
-    if (second !== null && second[0] === i && second[1] === j) return true;
+  const isActiveCell = (cell) => {
+    if (first !== null && first.x === cell.x && first.y === cell.y) return true;
+    if (second !== null && second.x === cell.x && second.y === cell.y) return true;
     return false;
   };
 
-  const isHintCell = (i, j) => {
+  const isHintCell = (cell) => {
     if (hintResult === null) return false;
-    const coordsFirst = hintResult[0].split(',');
-    const coordsSecond = hintResult[1].split(',');
-    const isFirstMatch = i === Number(coordsFirst[0]) && j === Number(coordsFirst[1]);
-    const isSecondMatch = i === Number(coordsSecond[0]) && j === Number(coordsSecond[1]);
-    return isFirstMatch || isSecondMatch;
+    const cellA = hintResult[0];
+    const cellB = hintResult[1];
+    return (cell.x === cellA.x && cell.y === cellA.y) || (cell.x === cellB.x && cell.y === cellB.y);
   };
 
   const handleContinue = () => {
@@ -114,7 +110,9 @@ function App() {
 
   const handleHint = () => {
     const result = searchCandidates(board);
-    setHintResult(result);
+    if (result !== null) {
+      setHintResult(result);
+    }
   };
 
   const onWin = () => {
@@ -144,19 +142,19 @@ function App() {
             </Typography>
           )}
           <div className='matrix'>
-            {board.map((row, i) =>
-              row.map((el, j) => (
+            {board.map((row) =>
+              row.map((cell) => (
                 <button
                   type='button'
                   className={cn('cell', {
-                    _active: isActiveCell(i, j),
-                    _hint: isHintCell(i, j),
+                    _active: isActiveCell(cell),
+                    _hint: isHintCell(cell),
                   })}
                   key={v4()}
-                  onClick={() => handleClick(i, j)}
-                  disabled={el.value === REMOVED || !el.value}
+                  onClick={() => handleClick(cell)}
+                  disabled={cell.value === REMOVED || !cell.value}
                 >
-                  {el.value === REMOVED ? <span>&#10005;</span> : el.value}
+                  {cell.value === REMOVED ? <span>&#10005;</span> : cell.value}
                 </button>
               ))
             )}
