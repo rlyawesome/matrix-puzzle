@@ -12,6 +12,9 @@ import {
   checkGameSuccess,
   searchCandidates,
   getCurrentValues,
+  linkX,
+  linkY,
+  unlink,
 } from './App.utils';
 
 const { matrix, latest } = getGeneratedMatrix();
@@ -38,8 +41,19 @@ function App() {
 
   const handleCandidatesSuccess = (a, b) => {
     const newBoard = [...board];
-    newBoard[a[0]][a[1]] = REMOVED;
-    newBoard[b[0]][b[1]] = REMOVED;
+
+    const elA = newBoard[a[0]][a[1]];
+    linkX(elA.prevX, elA.nextX);
+    linkY(elA.prevY, elA.nextY);
+    elA.value = REMOVED;
+    unlink(elA);
+
+    const elB = newBoard[b[0]][b[1]];
+    linkX(elB.prevX, elB.nextX);
+    linkY(elB.prevY, elB.nextY);
+    elB.value = REMOVED;
+    unlink(elB);
+
     if (checkGameSuccess(newBoard)) {
       onWin();
     }
@@ -84,7 +98,7 @@ function App() {
           break;
         }
         latest = [i, j];
-        newBoard[i][j] = values[pointer++];
+        newBoard[i][j].value = values[pointer++];
       }
     }
     if (values.length > pointer) {
@@ -140,9 +154,9 @@ function App() {
                   })}
                   key={v4()}
                   onClick={() => handleClick(i, j)}
-                  disabled={el === REMOVED || !el}
+                  disabled={el.value === REMOVED || !el.value}
                 >
-                  {el === REMOVED ? <span>&#10005;</span> : el}
+                  {el.value === REMOVED ? <span>&#10005;</span> : el.value}
                 </button>
               ))
             )}

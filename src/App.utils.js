@@ -5,6 +5,16 @@ export const ROWS_FILLED = 3;
 export const EMPTY = '';
 export const REMOVED = 'X';
 
+// const template = {
+//   x: 0,
+//   y: 0,
+//   value: 0,
+//   prevX: null,
+//   nextX: null,
+//   prevY: null,
+//   nextY: null
+// };
+
 export const getGeneratedMatrix = () => {
   const matrix = [];
   let latest = null;
@@ -21,17 +31,52 @@ export const getGeneratedMatrix = () => {
 
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
+      const el = {};
+
       if (i < ROWS_FILLED) {
-        matrix[i][j] = getRandomValue();
+        el.value = getRandomValue();
         latest = [i, j];
       } else {
-        matrix[i][j] = EMPTY;
+        el.value = EMPTY;
+      }
+
+      el.x = i;
+      el.y = j;
+      matrix[i][j] = el;
+
+      if (i > 0) {
+        const prevY = matrix[i - 1][j];
+        linkY(prevY, el);
+      }
+
+      if (i > 0 || j > 0) {
+        const prevX = j > 0 ? matrix[i][j - 1] : matrix[i - 1][C - 1];
+        linkX(prevX, el);
       }
     }
   }
 
   return { matrix, latest };
 };
+
+export const linkX  = (el1, el2) => {
+  if (el1) el1.nextX = el2;
+  if (el2) el2.prevX = el1;
+}
+
+export const linkY  = (el1, el2) => {
+  if (el1) el1.nextY = el2;
+  if (el2) el2.prevY = el1;
+}
+
+export const unlink = (el) => {
+  if (el) {
+    el.prevX = undefined;
+    el.nextX = undefined;
+    el.prevY = undefined;
+    el.nextY = undefined;
+  }
+}
 
 export const checkByValues = (x, y) => {
   return x === y || x + y === SUM;
@@ -44,7 +89,7 @@ const checkByColumn = (board, a, b) => {
   const min = Math.min(a[0], b[0]);
   const max = Math.max(a[0], b[0]);
   for (let i = min + 1; i < max; i++) {
-    if (board[i][a[1]] !== REMOVED) return false;
+    if (board[i][a[1]].value !== REMOVED) return false;
   }
 
   return true;
@@ -74,7 +119,7 @@ const checkByRows = (board, a, b) => {
 
   for (let i = from[0]; i <= to[0]; i++) {
     for (let j = i === from[0] ? from[1] + 1 : 0; j < (i === to[0] ? to[1] : C); j++) {
-      if (board[i][j] !== REMOVED) return false;
+      if (board[i][j].value !== REMOVED) return false;
     }
   }
 
@@ -83,8 +128,8 @@ const checkByRows = (board, a, b) => {
 
 export const checkCandidates = (board, a, b) => {
   console.log(a, b);
-  const firstValue = board[a[0]][a[1]];
-  const secondValue = board[b[0]][b[1]];
+  const firstValue = board[a[0]][a[1]].value;
+  const secondValue = board[b[0]][b[1]].value;
   if (!checkByValues(firstValue, secondValue)) return false;
   if (firstValue !== secondValue && firstValue + secondValue !== SUM) return false;
   console.log(checkByColumn(board, a, b), ' ', checkByRows(board, a, b));
@@ -95,7 +140,7 @@ export const checkCandidates = (board, a, b) => {
 export const checkGameSuccess = (board) => {
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
-      if (board[i][j] !== REMOVED && board[i][j] !== EMPTY) {
+      if (board[i][j].value !== REMOVED && board[i][j].value !== EMPTY) {
         return false;
       }
     }
@@ -103,52 +148,26 @@ export const checkGameSuccess = (board) => {
   return true;
 };
 
-const searchByColumn = (board, i, j) => {
-  for (let k = i + 1; k < R; k++) {
-    const secondValue = board[k][j];
-    if (secondValue === EMPTY) return null;
-    if (secondValue === REMOVED) continue;
-    if (checkByValues(board[i][j], secondValue)) {
-      // hint match result type
-      console.log([`${i},${j}`, `${k},${j}`]);
-      return [`${i},${j}`, `${k},${j}`];
-    } else {
-      return null;
-    }
-  }
-  return null;
-};
-
-const searchByRows = (board, i, j) => {
-  for (let ii = i; ii < R; ii++) {
-    const jjInitial = ii === i ? j + 1 : 0;
-    for (let jj = jjInitial; jj < C; jj++) {
-      const secondValue = board[ii][jj];
-      if (secondValue === EMPTY) return null;
-      if (secondValue === REMOVED) continue;
-      if (checkByValues(board[i][j], secondValue)) {
-        // hint match result type
-        console.log([`${i},${j}`, `${ii},${jj}`]);
-        return [`${i},${j}`, `${ii},${jj}`];
-      } else {
-        return null;
-      }
-    }
-  }
-  return null;
-};
-
 export const searchCandidates = (board) => {
-  let result = null;
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
-      const currentValue = board[i][j];
-      if (currentValue === EMPTY) return null;
-      if (currentValue === REMOVED) continue;
-      result = searchByColumn(board, i, j);
-      if (result !== null) return result;
-      result = searchByRows(board, i, j);
-      if (result !== null) return result;
+      const current = board[i][j];
+      if (current.value === EMPTY) return null;
+      if (current.value === REMOVED) continue;
+
+      const nextX = current.nextX;
+      if (nextX && checkByValues(current.value, nextX.value)) {
+        // hint match result type
+        console.log([`${current.x},${current.y}`, `${nextX.x},${nextX.y}`]);
+        return [`${current.x},${current.y}`, `${nextX.x},${nextX.y}`];
+      }
+
+      const nextY = current.nextY;
+      if (nextY && checkByValues(current.value, nextY.value)) {
+        // hint match result type
+        console.log([`${current.x},${current.y}`, `${nextY.x},${nextY.y}`]);
+        return [`${current.x},${current.y}`, `${nextY.x},${nextY.y}`];
+      }
     }
   }
   return null;
@@ -159,8 +178,8 @@ export const getCurrentValues = (board, last) => {
   for (let i = 0; i <= last[0]; i++) {
     for (let j = 0; j <= (i === last[0] ? last[1] : C - 1); j++) {
       console.log(i, j);
-      if (board[i][j] !== REMOVED && board[i][j] !== EMPTY) {
-        values.push(board[i][j]);
+      if (board[i][j].value !== REMOVED && board[i][j].value !== EMPTY) {
+        values.push(board[i][j].value);
       }
     }
   }
