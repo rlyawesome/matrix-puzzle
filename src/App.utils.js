@@ -1,9 +1,9 @@
-export const R = 15;
-export const C = 10;
+export const R = 5;
+export const C = 5;
 export const SUM = 10;
-export const ROWS_FILLED = 3;
 export const EMPTY = '';
 export const REMOVED = 'X';
+export const POINTS = 100;
 
 // const template = {
 //   x: 0,
@@ -15,13 +15,12 @@ export const REMOVED = 'X';
 //   nextY: null
 // };
 
+export const getRandomValue = () => {
+  return Math.floor(Math.random() * 9) + 1;
+};
+
 export const getGeneratedMatrix = () => {
   const matrix = [];
-  let latest = null;
-
-  const getRandomValue = () => {
-    return Math.floor(Math.random() * 9) + 1;
-  };
 
   for (let i = 0; i < R; i++) {
     for (let j = 0; j < C; j++) {
@@ -33,13 +32,7 @@ export const getGeneratedMatrix = () => {
     for (let j = 0; j < C; j++) {
       const el = {};
 
-      if (i < ROWS_FILLED) {
-        el.value = getRandomValue();
-        latest = [i, j];
-      } else {
-        el.value = EMPTY;
-      }
-
+      el.value = getRandomValue();
       el.x = i;
       el.y = j;
       matrix[i][j] = el;
@@ -49,14 +42,24 @@ export const getGeneratedMatrix = () => {
         linkY(prevY, el);
       }
 
-      if (i > 0 || j > 0) {
-        const prevX = j > 0 ? matrix[i][j - 1] : matrix[i - 1][C - 1];
+      if (j > 0) {
+        const prevX = matrix[i][j - 1];
         linkX(prevX, el);
       }
     }
   }
 
-  return { matrix, latest };
+  return matrix;
+};
+
+export const getValidMatrix = () => {
+  let matrix = null;
+  let result = null;
+  while (result === null) {
+    matrix = getGeneratedMatrix();
+    result = searchCandidates(matrix);
+  }
+  return matrix;
 };
 
 export const linkX = (el1, el2) => {
@@ -105,7 +108,7 @@ const checkByRows = (cellA, cellB) => {
     end = cellB;
   }
   const next = start.nextX;
-  if (next.x === end.x && next.y === end.y) return true;
+  if (next && next.x === end.x && next.y === end.y) return true;
   return false;
 };
 
