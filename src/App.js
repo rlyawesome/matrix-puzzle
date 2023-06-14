@@ -14,6 +14,7 @@ function App() {
   const [gameResult, setGameResult] = useState(null);
   const [hintResult, setHintResult] = useState(null);
   const [score, setScore] = useState(0);
+  const [visibleScoreIncrement, setVisibleScoreIncrement] = useState(false);
 
   useEffect(() => {
     if (first === null || second === null) return;
@@ -36,6 +37,7 @@ function App() {
 
   const onCandidatesSuccess = (cellA, cellB) => {
     setScore((prev) => prev + POINTS);
+    setVisibleScoreIncrement(true);
     const newBoard = [...board];
     cellA.value = getRandomValue();
     cellB.value = getRandomValue();
@@ -89,8 +91,16 @@ function App() {
         <Typography variant='h5' mb={2}>
           Matrix Puzzle
         </Typography>
-        <Typography variant='h6' textAlign='right'>
+        <Typography variant='h6' textAlign='right' position='relative'>
           Your score: <strong>{score}</strong>
+          <span
+            className={cn('score-increment', {
+              _visible: visibleScoreIncrement,
+            })}
+            onAnimationEnd={() => setVisibleScoreIncrement(false)}
+          >
+            +100
+          </span>
         </Typography>
       </header>
 

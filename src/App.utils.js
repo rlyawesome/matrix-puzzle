@@ -1,5 +1,5 @@
-export const R = 5;
-export const C = 5;
+export const R = 6;
+export const C = 6;
 export const SUM = 10;
 export const EMPTY = '';
 export const REMOVED = 'X';
