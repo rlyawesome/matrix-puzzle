@@ -63,7 +63,7 @@
 }
 
 .cell._success {
-  animation: pulse 1s;
+  animation: pulse 500ms;
   box-shadow: 0 0 0 16px transparent;
 }
 
