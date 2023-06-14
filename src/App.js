@@ -147,11 +147,11 @@ function App() {
             )}
           </div>
           <div className='toolbar'>
-            <Button variant='contained' onClick={handleNewGame} sx={{ backgroundColor: 'deepskyblue' }}>
+            <Button variant='outlined' onClick={handleNewGame} sx={{ color: '#ef6eae', borderColor: '#ef6eae' }}>
               New game
             </Button>
             <Box display='flex' gap={1}>
-              <Button variant='contained' onClick={handleHint} sx={{ backgroundColor: 'deepskyblue' }}>
+              <Button variant='outlined' onClick={handleHint} sx={{ color: '#ef6eae', borderColor: '#ef6eae' }}>
                 Hint
               </Button>
             </Box>
