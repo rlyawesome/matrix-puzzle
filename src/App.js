@@ -3,7 +3,7 @@ import { v4 } from 'uuid';
 import { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { Box, Button, Typography } from '@mui/material';
-import { REMOVED, checkCandidates, searchCandidates, getRandomValue, POINTS, getValidMatrix } from './App.utils';
+import { REMOVED, checkCandidates, searchCandidates, getRandomValue, POINTS, getValidMatrix, C } from './App.utils';
 
 const initialBoard = getValidMatrix();
 
@@ -15,6 +15,7 @@ function App() {
   const [hintResult, setHintResult] = useState(null);
   const [score, setScore] = useState(0);
   const [visibleScoreIncrement, setVisibleScoreIncrement] = useState(false);
+  const [successCells, setSuccessCells] = useState([]);
 
   useEffect(() => {
     if (first === null || second === null) return;
@@ -38,6 +39,7 @@ function App() {
   const onCandidatesSuccess = (cellA, cellB) => {
     setScore((prev) => prev + POINTS);
     setVisibleScoreIncrement(true);
+    setSuccessCells([cellA, cellB]);
     const newBoard = [...board];
     cellA.value = getRandomValue();
     cellB.value = getRandomValue();
@@ -65,6 +67,14 @@ function App() {
     if (first !== null && first.x === cell.x && first.y === cell.y) return true;
     if (second !== null && second.x === cell.x && second.y === cell.y) return true;
     return false;
+  };
+
+  const isSuccessCell = (cell) => {
+    if (successCells.length === 0) return false;
+    const cellA = successCells[0];
+    const cellB = successCells[1];
+    console.log(cell, cellA, cellB);
+    return (cell.x === cellA.x && cell.y === cellA.y) || (cell.x === cellB.x && cell.y === cellB.y);
   };
 
   const isHintCell = (cell) => {
@@ -124,10 +134,12 @@ function App() {
                   className={cn('cell', {
                     _active: isActiveCell(cell),
                     _hint: isHintCell(cell),
+                    _success: isSuccessCell(cell),
                   })}
-                  key={v4()}
+                  key={`${cell.x}${cell.y}`}
                   onClick={() => handleClick(cell)}
                   disabled={cell.value === REMOVED || !cell.value}
+                  onAnimationEnd={() => setSuccessCells([])}
                 >
                   {cell.value === REMOVED ? <span>&#10005;</span> : cell.value}
                 </button>

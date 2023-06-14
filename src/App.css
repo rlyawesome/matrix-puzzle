@@ -30,33 +30,47 @@
 .matrix {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 1px;
+  gap: 2px;
 }
 
 .cell {
   aspect-ratio: 1;
   font-size: 20px;
-  border: 0;
-  background: floralwhite;
-  color: #121212;
-  text-align: center;
-  padding: 0;
+}
+
+.cell {
+  --color: #ef6eae;
+  --hover: #ef8f6e;
+  color: var(--color);
+  transition: 0.25s;
+  background: none;
+  border: 2px solid;
+  font: inherit;
+  line-height: 1;
 }
 
 .cell:disabled {
   background-color: lightgray;
-  /* border: 0; */
 }
 
 .cell._hint {
   background-color: aquamarine;
-  border: none;
 }
 
 .cell._active {
-  background-color: deepskyblue;
+  border-color: var(--hover);
   color: #fff;
-  border: none;
+}
+
+.cell._success {
+  animation: pulse 1s;
+  box-shadow: 0 0 0 16px transparent;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--hover);
+  }
 }
 
 .toolbar {
