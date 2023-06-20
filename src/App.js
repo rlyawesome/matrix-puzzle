@@ -84,7 +84,7 @@ function App() {
     cellB.value = getRandomValue();
     const result = searchCandidates(newBoard);
     if (result === null) {
-      setGameResult('LOSE');
+      setBoard(getValidMatrix());
     } else {
       setBoard(newBoard);
     }
