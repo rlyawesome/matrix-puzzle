@@ -160,33 +160,33 @@ function App() {
       </header>
 
       <div className='body'>
-        <div className='toolbar'>
-          <Typography variant='h6' textAlign='right' position='relative'>
-            Score: <strong>{score}</strong>
-            <span
-              className={cn('score-count _plus', {
-                _visible: visibleScoreIncrement,
-              })}
-              onAnimationEnd={() => setVisibleScoreIncrement(false)}
-            >
-              +{POINTS_INCREMENT}
-            </span>
-            <span
-              className={cn('score-count _minus', {
-                _visible: visibleScoreDecrement,
-              })}
-              onAnimationEnd={() => setVisibleScoreDecrement(false)}
-            >
-              -{POINTS_DECREMENT}
-            </span>
-          </Typography>
-          <Box display='flex' gap={1}>
-            <StyledButton variant='outlined' onClick={handleHint}>
-              Hint
-            </StyledButton>
-          </Box>
-        </div>
         <div className='container'>
+          <div className='toolbar'>
+            <Typography variant='h6' textAlign='right' position='relative'>
+              Score: <strong>{score}</strong>
+              <span
+                className={cn('score-count _plus', {
+                  _visible: visibleScoreIncrement,
+                })}
+                onAnimationEnd={() => setVisibleScoreIncrement(false)}
+              >
+                +{POINTS_INCREMENT}
+              </span>
+              <span
+                className={cn('score-count _minus', {
+                  _visible: visibleScoreDecrement,
+                })}
+                onAnimationEnd={() => setVisibleScoreDecrement(false)}
+              >
+                -{POINTS_DECREMENT}
+              </span>
+            </Typography>
+            <Box display='flex' gap={1}>
+              <StyledButton variant='outlined' onClick={handleHint}>
+                Hint
+              </StyledButton>
+            </Box>
+          </div>
           <div className='matrix'>
             {board.map((row) =>
               row.map((cell) => (
@@ -207,11 +207,11 @@ function App() {
               ))
             )}
           </div>
-        </div>
-        <div className='actions'>
-          <StyledButton variant='outlined' onClick={handleNewGame}>
-            New game
-          </StyledButton>
+          <div className='actions'>
+            <StyledButton variant='outlined' onClick={handleNewGame}>
+              New game
+            </StyledButton>
+          </div>
         </div>
       </div>
     </div>
