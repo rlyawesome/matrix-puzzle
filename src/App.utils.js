@@ -1,9 +1,13 @@
-export const R = 6;
-export const C = 6;
+export const R = 7;
+export const C = 7;
 export const SUM = 10;
 export const EMPTY = '';
 export const REMOVED = 'X';
-export const POINTS = 100;
+export const POINTS_INCREMENT = 100;
+export const POINTS_DECREMENT = 200;
+export const TIMER_SECONDS_INCREMENT = 1;
+export const TIMER_SECONDS_DECREMENT = 1;
+export const TIMER = 60;
 
 // const template = {
 //   x: 0,

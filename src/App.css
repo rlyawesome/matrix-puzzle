@@ -1,5 +1,12 @@
+:root {
+  --color-primary: #ef6eae;
+  --color-success: #7effd4;
+  --color-error: #ff1493;
+  --color-info: #f8f8f8;
+}
+
 .app {
-  background-color: #282c34;
+  background-color: #1f142d;
   min-height: 100vh;
   font-size: calc(10px + 2vmin);
   color: white;
@@ -29,8 +36,9 @@
 
 .matrix {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 2px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  border: 1px solid var(--color-primary);
 }
 
 .cell {
@@ -39,12 +47,10 @@
 }
 
 .cell {
-  --color: #ef6eae;
-  --hover: #ef8f6e;
-  color: var(--color);
+  color: var(--color-primary);
   transition: 0.25s;
   background: none;
-  border: 2px solid;
+  border: 1px solid;
   line-height: 1;
 }
 
@@ -53,31 +59,31 @@
 }
 
 .cell._hint {
-  color: aquamarine;
+  color: var(--color-success);
 }
 
 .cell._active {
-  border-color: var(--hover);
-  color: #fff;
+  border-color: var(--color-info);
+  color: var(--color-info);
 }
 
 .cell._success {
   animation: pulse 500ms;
-  box-shadow: 0 0 0 16px transparent;
+  box-shadow: 0 0 0 8px transparent;
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 var(--hover);
+    box-shadow: 0 0 0 0 var(--color-success);
   }
 }
 
 .toolbar {
   display: flex;
-  margin-top: 1rem;
   margin-bottom: 1rem;
   justify-content: space-between;
   gap: 1rem;
+  width: 100%;
 }
 
 .button {
@@ -89,16 +95,22 @@
   margin-top: 0;
 }
 
-.score-increment {
+.score-count {
   position: absolute;
   right: 0;
   top: 0;
-  font-size: 12px;
-  color: aquamarine;
+  font-size: 14px;
   opacity: 0;
 }
 
-.score-increment._visible {
+.score-count._plus {
+  color: var(--color-success);
+}
+.score-count._minus {
+  color: var(--color-error);
+}
+
+.score-count._visible {
   animation: appear 500ms;
   animation-timing-function: ease-in-out;
 }
@@ -106,10 +118,29 @@
 @keyframes appear {
   from {
     opacity: 0;
-    transform: translateY(-17px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: translateY(-10px);
+    transform: translateY(-13px);
   }
+}
+
+.progress {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.progress .MuiLinearProgress-root {
+  background-color: var(--color-info);
+}
+.progress .MuiLinearProgress-barColorPrimary {
+  background-color: var(--color-primary);
+}
+
+.actions {
+  display: grid;
+  width: 100%;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
