@@ -1,14 +1,3 @@
-export const R = 7;
-export const C = 7;
-export const SUM = 10;
-export const EMPTY = '';
-export const REMOVED = 'X';
-export const POINTS_INCREMENT = 100;
-export const POINTS_DECREMENT = 200;
-export const TIMER_SECONDS_INCREMENT = 2;
-export const TIMER_SECONDS_DECREMENT = 1;
-export const TIMER = 60;
-
 // const template = {
 //   x: 0,
 //   y: 0,
@@ -19,11 +8,13 @@ export const TIMER = 60;
 //   nextY: null
 // };
 
+import { R, C, SUM, EMPTY, REMOVED } from './constants';
+
 export const getRandomValue = () => {
   return Math.floor(Math.random() * 9) + 1;
 };
 
-export const getGeneratedMatrix = () => {
+export const generatedMatrix = () => {
   const matrix = [];
 
   for (let i = 0; i < R; i++) {
@@ -37,6 +28,7 @@ export const getGeneratedMatrix = () => {
       const el = {};
 
       el.value = getRandomValue();
+      el.state = '#';
       el.x = i;
       el.y = j;
       matrix[i][j] = el;
@@ -56,11 +48,11 @@ export const getGeneratedMatrix = () => {
   return matrix;
 };
 
-export const getValidMatrix = () => {
+export const generateValidMatrix = () => {
   let matrix = null;
   let result = null;
   while (result === null) {
-    matrix = getGeneratedMatrix();
+    matrix = generatedMatrix();
     result = searchCandidates(matrix);
   }
   return matrix;
@@ -168,4 +160,17 @@ export const getCurrentValues = (board, last) => {
     }
   }
   return values;
+};
+
+export const generateVisitedMatrix = () => {
+  const matrix = [];
+
+  for (let i = 0; i < R; i++) {
+    matrix[i] = [];
+    for (let j = 0; j < C; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  return matrix;
 };
