@@ -24,7 +24,7 @@ export const generatePairValues = () => {
     if (n > MAX_NUMBER) {
       n = 1;
     }
-    values.push(getRandomValue());
+    values.push(n++);
   }
 
   return shuffle([...values, ...values]);
@@ -294,6 +294,7 @@ export const generateVisitedMatrix = () => {
 
 export const checkDungeonCells = (cellA, cellB, board) => {
   // if (!checkByValues(cellA.value, cellB.value)) return false;
+  console.log(cellA, cellB);
   if (cellA.value !== cellB.value) return false;
   if (cellA.x === cellB.x && cellA.y === cellB.y) return false;
   const rq = [];
@@ -385,6 +386,8 @@ export const checkDungeonCells = (cellA, cellB, board) => {
     console.log('reached end', moveCount);
     result.passed = true;
   }
+
+  cellB.state = '#';
 
   return result;
 };
