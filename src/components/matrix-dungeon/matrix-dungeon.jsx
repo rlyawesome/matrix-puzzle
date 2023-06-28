@@ -125,16 +125,15 @@ function MatrixDungeon() {
     setFirst(null);
     setSecond(null);
     setHintResult(null);
-    const result = searchDungeonCandidates(board);
-    if (result === null) {
-      setBoard(getValidReshuffledDungeonMatrix(board));
-    } else {
-      // setBoard(newBoard);
-      console.log('new board');
-    }
     if (checkDungeonGameSuccess(board)) {
+      console.log('won');
       setGameResult('WIN');
       setGameResultOpen(true);
+    } else {
+      const result = searchDungeonCandidates(board);
+      if (result === null) {
+        setBoard(getValidReshuffledDungeonMatrix(board));
+      }
     }
   };
 
