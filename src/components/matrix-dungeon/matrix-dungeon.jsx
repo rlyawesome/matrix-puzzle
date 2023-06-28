@@ -2,16 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 import { Backdrop, Box, Button, LinearProgress, styled, Typography } from '@mui/material';
 import {
-  checkCandidates,
-  searchCandidates,
-  getRandomValue,
-  generateValidMatrix,
-  generateVisitedMatrix,
-  checkByValues,
   checkDungeonCells,
-  generateDungeonMatrix,
   searchDungeonCandidates,
-  reshuffleDungeonMatrix,
   generateValidDungeonMatrix,
   checkDungeonGameSuccess,
   getValidReshuffledDungeonMatrix,
