@@ -5,6 +5,7 @@ import MatrixSquare from './components/matrix-square/matrix-square';
 function App() {
   return (
     <div className='app'>
+      <div className='image'></div>
       <MatrixDungeon />
     </div>
   );

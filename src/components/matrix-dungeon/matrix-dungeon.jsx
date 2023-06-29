@@ -212,7 +212,7 @@ function MatrixDungeon() {
       <div className='body'>
         <div className='container'>
           <div className='toolbar'>
-            {/* <Typography variant='h6' textAlign='right' position='relative'>
+            <Typography variant='h6' textAlign='right' position='relative'>
               Score: <strong>{score}</strong>
               <span
                 className={cn('score-count _plus', {
@@ -230,7 +230,7 @@ function MatrixDungeon() {
               >
                 -{POINTS_DECREMENT}
               </span>
-            </Typography> */}
+            </Typography>
             <Box display='flex' gap={1} flex='1' justifyContent='flex-end'>
               <StyledBadge badgeContent={hintCount}>
                 <StyledButton variant='outlined' onClick={handleHint} disabled={hintCount === 0}>

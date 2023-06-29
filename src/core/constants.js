@@ -7,5 +7,5 @@ export const POINTS_INCREMENT = 100;
 export const POINTS_DECREMENT = 200;
 export const TIMER_SECONDS_INCREMENT = 2;
 export const TIMER_SECONDS_DECREMENT = 1;
-export const TIMER = 240;
-export const MAX_NUMBER = 16;
+export const TIMER = 180;
+export const MAX_NUMBER = 20;
