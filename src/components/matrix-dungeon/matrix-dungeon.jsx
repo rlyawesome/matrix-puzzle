@@ -9,6 +9,7 @@ import {
   getValidReshuffledDungeonMatrix,
 } from '../../core/core';
 import { spring } from 'react-flip-toolkit';
+import ballTap from './ball-tap.mp3';
 
 import {
   R,
@@ -25,6 +26,7 @@ import {
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
 
 const matrix = generateValidDungeonMatrix();
+const audio = new Audio(ballTap);
 
 const StyledButton = styled(Button)(() => ({
   color: '#ef6eae',
@@ -122,6 +124,7 @@ function MatrixDungeon() {
       }
       return sec;
     });
+    audio.play();
     first.state = '.';
     second.state = '.';
     setSuccessCells([first, second]);
