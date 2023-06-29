@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
-import { Backdrop, Box, Button, LinearProgress, styled, Typography } from '@mui/material';
+import { Backdrop, Badge, Box, Button, LinearProgress, styled, Typography } from '@mui/material';
 import {
   checkDungeonCells,
   searchDungeonCandidates,
@@ -32,6 +32,17 @@ const StyledButton = styled(Button)(() => ({
   '&:hover': {
     borderColor: '#ef6eae',
   },
+  '&:disabled': {
+    opacity: 0.5,
+    color: '#ef6eae',
+    borderColor: '#ef6eae',
+  },
+}));
+
+const StyledBadge = styled(Badge)(() => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: '#ef6eae',
+  },
 }));
 
 function MatrixDungeon() {
@@ -47,6 +58,7 @@ function MatrixDungeon() {
   const [timerSeconds, setTimerSeconds] = useState(TIMER);
   const [successPath, setSuccessPath] = useState([]);
   const [gameResultOpen, setGameResultOpen] = useState(false);
+  const [hintCount, setHintCount] = useState(5);
 
   const containerRef = useRef(null);
   useEffect(() => {
@@ -55,14 +67,13 @@ function MatrixDungeon() {
       spring({
         config: 'wobbly',
         values: {
-          translateY: [-15, 0],
           opacity: [0, 1],
         },
         onUpdate: ({ translateY, opacity }) => {
           el.style.opacity = opacity;
           el.style.transform = `translateY(${translateY}px)`;
         },
-        delay: i * 10,
+        delay: i * 15,
         onComplete: () => {
           // add callback logic here if necessary
         },
@@ -180,11 +191,12 @@ function MatrixDungeon() {
   };
 
   const handleHint = () => {
-    if (gameResult !== null) return;
+    if (gameResult !== null || hintResult) return;
     const result = searchDungeonCandidates(board);
     if (result !== null) {
       setHintResult(result);
     }
+    setHintCount((prev) => prev - 1);
     setScore((prev) => prev - POINTS_DECREMENT);
     setVisibleScoreDecrement(true);
   };
@@ -197,7 +209,7 @@ function MatrixDungeon() {
       <div className='body'>
         <div className='container'>
           <div className='toolbar'>
-            <Typography variant='h6' textAlign='right' position='relative'>
+            {/* <Typography variant='h6' textAlign='right' position='relative'>
               Score: <strong>{score}</strong>
               <span
                 className={cn('score-count _plus', {
@@ -215,11 +227,13 @@ function MatrixDungeon() {
               >
                 -{POINTS_DECREMENT}
               </span>
-            </Typography>
-            <Box display='flex' gap={1}>
-              <StyledButton variant='outlined' onClick={handleHint}>
-                Hint
-              </StyledButton>
+            </Typography> */}
+            <Box display='flex' gap={1} flex='1' justifyContent='flex-end'>
+              <StyledBadge badgeContent={hintCount}>
+                <StyledButton variant='outlined' onClick={handleHint} disabled={hintCount === 0}>
+                  Hint
+                </StyledButton>
+              </StyledBadge>
             </Box>
           </div>
           <div className='matrix' ref={containerRef}>

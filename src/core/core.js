@@ -18,13 +18,13 @@ export const getRandomValue = () => {
 
 export const generatePairValues = () => {
   const values = [];
-  let n = 1;
-
+  // const emojis = ['😀', '😃', '😄', '😁'];
+  let k = 1;
   for (let i = 0; i < (R * C) / 2; i++) {
-    if (n > MAX_NUMBER) {
-      n = 1;
+    if (k > MAX_NUMBER) {
+      k = 1;
     }
-    values.push(n++);
+    values.push(k++);
   }
 
   return shuffle([...values, ...values]);
